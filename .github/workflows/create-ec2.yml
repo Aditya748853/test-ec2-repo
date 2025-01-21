@@ -11,7 +11,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Install AWS CLI
+      - name: Install or Update AWS CLI
         run: |
           # Download the AWS CLI v2 installer
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -19,8 +19,8 @@ jobs:
           sudo apt update && sudo apt install unzip -y
           # Unzip the installer
           unzip awscliv2.zip
-          # Run the installer
-          sudo ./aws/install
+          # Install or update AWS CLI
+          sudo ./aws/install --update
           # Verify installation
           aws --version
 

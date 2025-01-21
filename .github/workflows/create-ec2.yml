@@ -1,0 +1,43 @@
+name: Create EC2 Instance
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-ec2:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt update
+          sudo apt install -y awscli
+
+      - name: Configure AWS CLI
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_REGION }}
+
+      - name: Launch EC2 Instance
+        run: |
+          INSTANCE_ID=$(aws ec2 run-instances \
+            --image-id ami-00bb6a80f01f03502 \ # Replace with your preferred AMI ID
+            --count 1 \
+            --instance-type t2.micro \
+            --key-name momo \ # Replace with your key pair name
+            --security-group-ids sg-098abba7dbf67b15c \ # Replace with your security group ID
+            --subnet-id subnet-06ff5526352692bbc \ # Replace with your subnet ID
+            --query 'Instances[0].InstanceId' \
+            --output text)
+
+          echo "EC2 Instance created with ID: $INSTANCE_ID"
+
+      - name: Tag the Instance
+        run: |
+          aws ec2 create-tags \
+            --resources $INSTANCE_ID \
+            --tags Key=Name,Value=GitHubActionsInstance

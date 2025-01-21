@@ -32,7 +32,7 @@ jobs:
 
       - name: Launch EC2 Instance
         run: |
-          # Launch an EC2 instance
+          # Launch an EC2 instance and capture the instance ID
           INSTANCE_ID=$(aws ec2 run-instances \
             --image-id ami-00bb6a80f01f03502 \
             --count 1 \
@@ -43,10 +43,20 @@ jobs:
             --query 'Instances[0].InstanceId' \
             --output text)
 
+          # Check if the instance ID was captured
+          if [ "$INSTANCE_ID" == "None" ]; then
+            echo "Failed to launch EC2 instance."
+            exit 1
+          fi
+
           echo "EC2 Instance created with ID: $INSTANCE_ID"
 
       - name: Tag the Instance
         run: |
+          if [ -z "$INSTANCE_ID" ]; then
+            echo "No instance ID found. Skipping tag creation."
+            exit 1
+          fi
           aws ec2 create-tags \
             --resources $INSTANCE_ID \
             --tags Key=Name,Value=GitHubActionsInstance

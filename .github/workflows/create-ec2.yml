@@ -13,8 +13,16 @@ jobs:
 
       - name: Install AWS CLI
         run: |
-          sudo apt update
-          sudo apt install -y awscli
+          # Download the AWS CLI v2 installer
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          # Install unzip utility
+          sudo apt update && sudo apt install unzip -y
+          # Unzip the installer
+          unzip awscliv2.zip
+          # Run the installer
+          sudo ./aws/install
+          # Verify installation
+          aws --version
 
       - name: Configure AWS CLI
         run: |
@@ -24,6 +32,7 @@ jobs:
 
       - name: Launch EC2 Instance
         run: |
+          # Launch an EC2 instance
           INSTANCE_ID=$(aws ec2 run-instances \
             --image-id ami-00bb6a80f01f03502 \ # Replace with your preferred AMI ID
             --count 1 \

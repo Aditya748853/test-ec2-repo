@@ -35,8 +35,8 @@ jobs:
           # Launch an EC2 instance and capture the instance ID
           INSTANCE_ID=$(aws ec2 run-instances \
             --image-id ami-00bb6a80f01f03502 \
-            --count 1 \
-            --instance-type t2.micro \
+            --count 3 \
+            --instance-type t3.medium \
             --key-name momo \
             --security-group-ids sg-098abba7dbf67b15c \
             --subnet-id subnet-06ff5526352692bbc \

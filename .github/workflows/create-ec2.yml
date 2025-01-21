@@ -34,12 +34,12 @@ jobs:
         run: |
           # Launch an EC2 instance
           INSTANCE_ID=$(aws ec2 run-instances \
-            --image-id ami-00bb6a80f01f03502 \ # Replace with your preferred AMI ID
+            --image-id ami-00bb6a80f01f03502 \
             --count 1 \
             --instance-type t2.micro \
-            --key-name momo \ # Replace with your key pair name
-            --security-group-ids sg-098abba7dbf67b15c \ # Replace with your security group ID
-            --subnet-id subnet-06ff5526352692bbc \ # Replace with your subnet ID
+            --key-name momo \
+            --security-group-ids sg-098abba7dbf67b15c \
+            --subnet-id subnet-06ff5526352692bbc \
             --query 'Instances[0].InstanceId' \
             --output text)
 
